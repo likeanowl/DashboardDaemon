@@ -4,11 +4,9 @@
 #include <QObject>
 #include <QVector>
 #include <QTimer>
-#include </home/trikRuntime/trikControl/include/trikControl/brickInterface.h>
 #include "fakeobserver.h"
 #include "tcpcommunicator.h"
-
-using namespace trikControl;
+#include <QElapsedTimer>
 
 class FakeObserver;
 class FakeGyroObserver;
@@ -37,7 +35,6 @@ private slots:
     void parseMessage(QString message);
 
 private:
-    //BrickInterface *brick;
     TcpCommunicator tcpCommunicator;
     QVector<FakeObserver *> fakeObservers;
     FakeGyroObserver* fakeGyroObserver;

@@ -1,6 +1,5 @@
 #pragma once
 #include "telemetry_const.h"
-
 #include </trikRuntime/trikControl/include/trikControl/brickInterface.h>
 #include "daemon.h"
 #include <QObject>

@@ -4,8 +4,6 @@
 #include <QObject>
 #include <QTimer>
 
-using namespace trikControl;
-
 class FakeDaemon;
 
 class FakeObserver : public QObject

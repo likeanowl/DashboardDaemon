@@ -1,6 +1,5 @@
 #pragma once
 #include "telemetry_const.h"
-
 #include <QObject>
 #include <QTcpServer>
 #include <QTcpSocket>

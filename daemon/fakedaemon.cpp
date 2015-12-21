@@ -1,7 +1,6 @@
 #include "fakedaemon.h"
 #include <QDebug>
 #include <QStringList>
-#include </trikRuntime/trikControl/include/trikControl/brickFactory.h>
 
 FakeDaemon::FakeDaemon(QThread *guiThread, QString configPath) //:
     //brick(trikControl::BrickFactory::create())
@@ -102,6 +101,7 @@ void FakeDaemon::startTelemetry()
 void FakeDaemon::zipPackage()
 {
     QString package;
+    QElapsedTimer elapsedTimer;
 
     for (int i = 0; i < fakeObservers.size(); i++)
     {
@@ -119,7 +119,9 @@ void FakeDaemon::zipPackage()
     if (package.size() > 0)
     {
         qDebug() << package ;
+        elapsedTimer.start();
         tcpCommunicator.send(package);
+        qDebug() << "Package send took " << elapsedTimer.elapsed() << "milliseconds";
     }
 
 }
