@@ -1,14 +1,14 @@
 #include "communicator.h"
+#include <QDataStream>
 
 Communicator::Communicator() :
     mBlockSize(0),
     hiMessage(true)
 {
     mSocket = new QTcpSocket(this);
-    connect(mSocket, &QTcpSocket::readyRead, this, &TcpCommunicator::read);
-    connect(mSocket, &QTcpSocket::connected, this, &TcpCommunicator::setConnection);
-    connect(mSocket, &QTcpSocket::disconnected, this, &TcpCommunicator::abortConnection);
-    connect(this, &TcpCommunicator::recieveMessage, this->mParser, &Parser::parseMessage);
+    connect(mSocket, &QTcpSocket::readyRead, this, &Communicator::read);
+    connect(mSocket, &QTcpSocket::connected, this, &Communicator::setConnection);
+    connect(mSocket, &QTcpSocket::disconnected, this, &Communicator::abortConnection);
 }
 
 void Communicator::setConnection()

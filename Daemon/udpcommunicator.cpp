@@ -29,6 +29,7 @@ void UdpCommunicator::setConnection()
     hostIp = bufferSocket->peerAddress();
     bufferSocket->deleteLater();
     udpSocket->setSocketOption(QAbstractSocket::LowDelayOption, 1);
+    udpSocket->bind(hostIp, 1221);
     blockSize = 0;
     connect(udpSocket, SIGNAL(readyRead()), this, SLOT(read()));
     connect(udpSocket, SIGNAL(disconnected()), this, SLOT(abortConnection()));
@@ -50,7 +51,7 @@ void UdpCommunicator::send(QString message)
     out << message;
     out.device()->seek(0);
     out << (quint16)(block.size() - sizeof(quint16));
-    udpSocket->write(block);
+    udpSocket->writeDatagram(block, hostIp, 1221);
 }
 
 void UdpCommunicator::read()

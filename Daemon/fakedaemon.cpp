@@ -8,11 +8,11 @@ FakeDaemon::FakeDaemon(QThread *guiThread, QString configPath) //:
 {
     updatePeriod = TCP_PEDIOD;
 
-    tcpCommunicator.setPort(START_PORT_INT);
-    tcpCommunicator.listen();
-    connect(&tcpCommunicator, SIGNAL(newConnection()), this, SLOT(startTelemetry()));
-    connect(&tcpCommunicator, SIGNAL(recieveMessage(QString)), this, SLOT(parseMessage(QString)));
-    connect(&tcpCommunicator, SIGNAL(lostConnection()), this, SLOT(closeTelemetry()));
+    udpCommunicator.setPort(START_PORT_INT);
+    udpCommunicator.listen();
+    connect(&udpCommunicator, SIGNAL(newConnection()), this, SLOT(startTelemetry()));
+    connect(&udpCommunicator, SIGNAL(recieveMessage(QString)), this, SLOT(parseMessage(QString)));
+    connect(&udpCommunicator, SIGNAL(lostConnection()), this, SLOT(closeTelemetry()));
 
     fakeGyroObserver = new FakeGyroObserver(GYROSCOPE_NAME, this);
     fakeGyroObserver->setUpdateInterval(SENSORS3D_DATA_UPDATE_PERIOD);
@@ -90,7 +90,7 @@ void FakeDaemon::attach(FakeObserver *fakeObs)
 
 void FakeDaemon::startTelemetry()
 {
-    tcpCommunicator.send(TelemetryConst::SEND_FROM_DAEMON_MESSAGE());
+    udpCommunicator.send(TelemetryConst::SEND_FROM_DAEMON_MESSAGE());
 
     timer.stop();
     connect(&timer, SIGNAL(timeout()), this, SLOT(zipPackage()));
@@ -120,7 +120,7 @@ void FakeDaemon::zipPackage()
     {
         qDebug() << package ;
         elapsedTimer.start();
-        tcpCommunicator.send(package);
+        udpCommunicator.send(package);
         qDebug() << "Package send took " << elapsedTimer.elapsed() << "milliseconds";
     }
 
