@@ -3,6 +3,7 @@
 #include <QObject>
 #include <QTcpServer>
 #include <QTcpSocket>
+#include <QDataStream>
 
 class TcpCommunicator : public QObject
 {

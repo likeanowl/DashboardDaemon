@@ -1,4 +1,5 @@
 #include "udpcommunicator.h"
+#include <QTcpSocket>
 
 UdpCommunicator::UdpCommunicator(QObject *parent) :
     QObject(parent),
@@ -10,11 +11,11 @@ UdpCommunicator::UdpCommunicator(QObject *parent) :
 void UdpCommunicator::listen()
 {
     tcpServer = new QTcpServer(this);
-    if (!server->listen(QHostAddress::Any, port)) {
-        qDebug()<<"Unable to start the server: " << server->errorString();
-        server->close();
+    if (!tcpServer->listen(QHostAddress::Any, port)) {
+        qDebug()<<"Unable to start the server: " << tcpServer->errorString();
+        tcpServer->close();
     }
-    connect(server, SIGNAL(newConnection()), this, SLOT(setConnection()));
+    connect(tcpServer, SIGNAL(newConnection()), this, SLOT(setConnection()));
 }
 
 void UdpCommunicator::setPort(int numPort)
@@ -24,19 +25,19 @@ void UdpCommunicator::setPort(int numPort)
 
 void UdpCommunicator::setConnection()
 {
-    socket = server->nextPendingConnection();
-    socket->setSocketOption(QAbstractSocket::LowDelayOption, 1);
-
+    QTcpSocket *bufferSocket = tcpServer->nextPendingConnection();
+    hostIp = bufferSocket->peerAddress();
+    bufferSocket->deleteLater();
+    udpSocket->setSocketOption(QAbstractSocket::LowDelayOption, 1);
     blockSize = 0;
-    connect(socket, SIGNAL(readyRead()), this, SLOT(read()));
-//    connect(socket, SIGNAL(disconnected()), socket, SLOT(deleteLater()));
-    connect(socket, SIGNAL(disconnected()), this, SLOT(abortConnection()));
+    connect(udpSocket, SIGNAL(readyRead()), this, SLOT(read()));
+    connect(udpSocket, SIGNAL(disconnected()), this, SLOT(abortConnection()));
     emit newConnection();
 }
 
 void UdpCommunicator::abortConnection()
 {
-    socket->disconnectFromHost();
+    udpSocket->disconnectFromHost();
     emit lostConnection();
 }
 
@@ -44,7 +45,7 @@ void UdpCommunicator::send(QString message)
 {
     QByteArray block;
     QDataStream out(&block, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_0);
+    out.setVersion(QDataStream::Qt_4_8);
     out << (quint16)0;
     out << message;
     out.device()->seek(0);
@@ -54,7 +55,7 @@ void UdpCommunicator::send(QString message)
 
 void UdpCommunicator::read()
 {
-    QDataStream in(socket);
+    QDataStream in(udpSocket);
     in.setVersion(QDataStream::Qt_4_0);
     QString message;
 
@@ -62,13 +63,13 @@ void UdpCommunicator::read()
     {
         if (!blockSize)
         {
-            if (socket->bytesAvailable() < sizeof(quint16))
+            if (udpSocket->bytesAvailable() < sizeof(quint16))
             {
                 break;
             }
             in >> blockSize;
         }
-        if (socket->bytesAvailable() < blockSize)
+        if (udpSocket->bytesAvailable() < blockSize)
         {
             break;
         }

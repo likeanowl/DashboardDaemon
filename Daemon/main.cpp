@@ -1,4 +1,4 @@
-#include <QtGui/QApplication>
+#include </usr/include/qt/QtWidgets/QApplication>
 #include "daemon.h"
 #include "fakedaemon.h"
 

@@ -44,3 +44,7 @@ HEADERS += \
     fakeobserver.h \
     fakedaemon.h \
     udpcommunicator.h
+unix {
+    target.path = /usr/lib
+    INSTALLS += target
+}

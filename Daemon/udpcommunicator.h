@@ -2,7 +2,8 @@
 #include "telemetry_const.h"
 #include <QObject>
 #include <QTcpServer>
-#include <QTcpSocket>
+#include <QUdpSocket>
+#include <QDataStream>
 
 class UdpCommunicator : public QObject
 {
@@ -29,5 +30,6 @@ private:
     int         port;
     QTcpServer* tcpServer;
     QUdpSocket* udpSocket;
+    QHostAddress hostIp;
     quint16     blockSize;
 };
