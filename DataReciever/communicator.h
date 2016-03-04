@@ -3,7 +3,7 @@
 #include <QString>
 #include <QTcpSocket>
 
-class Communicator
+class Communicator : public QObject
 {
     Q_OBJECT
 
@@ -28,7 +28,7 @@ protected slots:
 
 private:
     int         mPort = 1221;
-    QString     mIp = "192.168.77.1";
+    QString     mIp = "127.0.0.1";
     QTcpSocket* mSocket;
     quint16     mBlockSize;
     bool        hiMessage;

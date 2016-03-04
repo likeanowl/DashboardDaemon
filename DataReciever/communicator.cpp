@@ -5,7 +5,7 @@ Communicator::Communicator() :
     mBlockSize(0),
     hiMessage(true)
 {
-    mSocket = new QTcpSocket(this);
+    mSocket = new QTczpSocket(this);
     connect(mSocket, &QTcpSocket::readyRead, this, &Communicator::read);
     connect(mSocket, &QTcpSocket::connected, this, &Communicator::setConnection);
     connect(mSocket, &QTcpSocket::disconnected, this, &Communicator::abortConnection);
@@ -14,6 +14,7 @@ Communicator::Communicator() :
 void Communicator::setConnection()
 {
     emit newConnection();
+    qDebug() << "Connecting to " << mIp;
 }
 
 void Communicator::abortConnection()
@@ -31,6 +32,7 @@ void Communicator::connectToHost()
     mBlockSize = 0;
     mSocket->abort();
     mSocket->connectToHost(mIp, mPort);
+    qDebug() << "Connected";
 }
 
 bool Communicator::isConnected()
@@ -42,12 +44,13 @@ void Communicator::send(QString message)
 {
     QByteArray block;
     QDataStream out(&block, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_0);
+    out.setVersion(QDataStream::Qt_4_8);
     out << (quint16)0;
     out << message;
     out.device()->seek(0);
     out << (quint16)(block.size() - sizeof(quint16));
     mSocket->write(block);
+    qDebug() << "Message sent" << message;
 }
 
 void Communicator::read()
@@ -55,6 +58,7 @@ void Communicator::read()
     if (hiMessage)
     {
         hiMessage = false;
+        qDebug() << hiMessage;
         return;
     }
 
@@ -78,6 +82,7 @@ void Communicator::read()
         }
         in >> message;
         mBlockSize = 0;
+        qDebug() << message;
         emit recieveMessage(message);
     }
 }

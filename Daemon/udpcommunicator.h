@@ -22,14 +22,14 @@ public slots:
     void send(QString);
 
 private slots:
-    void setConnection();
+    void bindSocket();
     void abortConnection();
-    void read();
+    void readNextDatagram();
 
 private:
     int         port;
     QTcpServer* tcpServer;
     QUdpSocket* udpSocket;
-    QHostAddress hostIp;
+    QHostAddress hostAddr;
     quint16     blockSize;
 };

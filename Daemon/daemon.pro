@@ -4,12 +4,12 @@
 #
 #-------------------------------------------------
 
-TRIKCONTROL_BINDIR = /trikRuntime/bin/arm-release
-TRIKCONTROL_DIR = ../../trikRuntime/trikControl
+#TRIKCONTROL_BINDIR = /home/likeanowl/trikRuntime/bin/arm-release
+#TRIKCONTROL_DIR = ../../trikRuntime/trikControl
 
-QT       += core
+QT       += core gui
 QT       += network
-QT       += gui
+QT       += printsupport
 
 TARGET = daemon
 CONFIG   += console
@@ -23,27 +23,28 @@ INCLUDEPATH = \
         $$TRIKCONTROL_DIR/include \
         telemetry/ \
 
-LIBS += -L$$TRIKCONTROL_BINDIR -ltrikControl -ltrikKernel -lqslog -ltrikHal
+#LIBS += -L$$TRIKCONTROL_BINDIR -ltrikControl -ltrikKernel -lqslog -ltrikHal
 
 !macx {
         QMAKE_LFLAGS += -Wl,-O1,-rpath,.
 }
 
 SOURCES += main.cpp \
-    daemon.cpp \
     tcpcommunicator.cpp \
-    observer.cpp \
     fakeobserver.cpp \
     fakedaemon.cpp \
     udpcommunicator.cpp
+    #daemon.cpp \
+    #observer.cpp
 HEADERS += \
-    daemon.h \
     tcpcommunicator.h \
-    observer.h \
     telemetry_const.h \
     fakeobserver.h \
     fakedaemon.h \
     udpcommunicator.h
+    #daemon.h \
+    #observer.h
+
 unix {
     target.path = /usr/lib
     INSTALLS += target

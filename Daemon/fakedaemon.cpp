@@ -2,9 +2,7 @@
 #include <QDebug>
 #include <QStringList>
 
-FakeDaemon::FakeDaemon(QThread *guiThread, QString configPath) //:
-    //brick(trikControl::BrickFactory::create())
-
+FakeDaemon::FakeDaemon(QThread *guiThread, QString configPath)
 {
     updatePeriod = TCP_PEDIOD;
 
@@ -21,12 +19,6 @@ FakeDaemon::FakeDaemon(QThread *guiThread, QString configPath) //:
     fakeBatteryObserver = new FakeBatteryObserver(BATTERY_NAME, this);
     fakeBatteryObserver->setUpdateInterval(BATTERY_DATA_UPDATE_PERIOD);
 
-    //toDO: encodersPorts,motorPorts list;
-    //toDO: send info to Dashboard about devices;
-
-    //qDebug() << brick->motorPorts(MotorInterface::Type::powerMotor);
-    //qDebug() << brick->encoderPorts();
-
     fakePowerMotor1 = new FakePowerMotorObserver(POWER_MOTOR1_NAME, this);
     fakePowerMotor1->setUpdateInterval(MOTOR_DATA_UPDATE_PERIOD);
     fakePowerMotor2 = new FakePowerMotorObserver(POWER_MOTOR2_NAME, this);
@@ -35,11 +27,6 @@ FakeDaemon::FakeDaemon(QThread *guiThread, QString configPath) //:
     fakePowerMotor3->setUpdateInterval(MOTOR_DATA_UPDATE_PERIOD);
     fakePowerMotor4 = new FakePowerMotorObserver(POWER_MOTOR4_NAME, this);
     fakePowerMotor4->setUpdateInterval(MOTOR_DATA_UPDATE_PERIOD);
-
-    /*
-    encoder1 = new EncoderObserver(ENCODER1_NAME, &brick, this);
-    encoder1->setUpdateInterval(ENCODER_DATA_UPDATE_PERIOD);
-    */
 
     fakeEncoder2 = new FakeEncoderObserver(ENCODER2_NAME, this);
     fakeEncoder2->setUpdateInterval(ENCODER_DATA_UPDATE_PERIOD);

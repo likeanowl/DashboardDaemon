@@ -3,7 +3,7 @@
 
 UdpCommunicator::UdpCommunicator(QObject *parent) :
     QObject(parent),
-    port(START_PORT_INT),
+    port(1221),
     blockSize(0)
 {
 }
@@ -15,7 +15,7 @@ void UdpCommunicator::listen()
         qDebug()<<"Unable to start the server: " << tcpServer->errorString();
         tcpServer->close();
     }
-    connect(tcpServer, SIGNAL(newConnection()), this, SLOT(setConnection()));
+    connect(tcpServer, SIGNAL(newConnection()), this, SLOT(bindSocket()));
 }
 
 void UdpCommunicator::setPort(int numPort)
@@ -23,15 +23,16 @@ void UdpCommunicator::setPort(int numPort)
     port = numPort;
 }
 
-void UdpCommunicator::setConnection()
+void UdpCommunicator::bindSocket()
 {
     QTcpSocket *bufferSocket = tcpServer->nextPendingConnection();
-    hostIp = bufferSocket->peerAddress();
+    hostAddr = bufferSocket->peerAddress();
+    qDebug() << "Get new connection " << hostAddr.toString();
     bufferSocket->deleteLater();
-    udpSocket->setSocketOption(QAbstractSocket::LowDelayOption, 1);
-    udpSocket->bind(hostIp, 1221);
+    udpSocket = new QUdpSocket(this);
+    udpSocket->bind(hostAddr, port);
     blockSize = 0;
-    connect(udpSocket, SIGNAL(readyRead()), this, SLOT(read()));
+    connect(udpSocket, SIGNAL(readyRead()), this, SLOT(readNextDatagram()));
     connect(udpSocket, SIGNAL(disconnected()), this, SLOT(abortConnection()));
     emit newConnection();
 }
@@ -51,12 +52,21 @@ void UdpCommunicator::send(QString message)
     out << message;
     out.device()->seek(0);
     out << (quint16)(block.size() - sizeof(quint16));
-    udpSocket->writeDatagram(block, hostIp, 1221);
+    udpSocket->writeDatagram(block, hostAddr, port);
 }
 
-void UdpCommunicator::read()
+void UdpCommunicator::readNextDatagram()
 {
-    QDataStream in(udpSocket);
+    while (udpSocket->hasPendingDatagrams())
+    {
+        QByteArray datagram;
+        datagram.resize(udpSocket->pendingDatagramSize());
+        udpSocket->readDatagram(datagram.data(), datagram.size());
+        QString message(datagram.data());
+        qDebug() << message;
+        emit recieveMessage(message);
+    }
+    /*QDataStream in(udpSocket);
     in.setVersion(QDataStream::Qt_4_0);
     QString message;
 
@@ -77,5 +87,5 @@ void UdpCommunicator::read()
         in >> message;
         blockSize = 0;
         emit recieveMessage(message);
-    }
+    }*/
 }

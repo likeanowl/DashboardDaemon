@@ -1,6 +1,7 @@
-#include </usr/include/qt/QtWidgets/QApplication>
-#include "daemon.h"
+#include <QApplication>
+//#include "daemon.h"
 #include "fakedaemon.h"
+#include <QtCore>
 
 int main(int argc, char *argv[])
 {
