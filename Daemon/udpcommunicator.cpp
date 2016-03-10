@@ -7,28 +7,18 @@ UdpCommunicator::UdpCommunicator() :
 {
 }
 
-void UdpCommunicator::listen()
-{
-    tcpServer = new QTcpServer(this);
-    if (!tcpServer->listen(QHostAddress::Any, port))
-    {
-        qDebug()<<"Unable to start the server: " << tcpServer->errorString();
-        tcpServer->close();
-    }
-    connect(tcpServer, SIGNAL(newConnection()), this, SLOT(setConnection()));
-}
-
 void UdpCommunicator::setPort(int numPort)
 {
     port = numPort;
 }
 
+void UdpCommunicator::setHostAddr(QHostAddress hostAddress)
+{
+    hostAddr = hostAddress;
+}
+
 void UdpCommunicator::setConnection()
 {
-    QTcpSocket *bufferSocket = tcpServer->nextPendingConnection();
-    hostAddr = bufferSocket->peerAddress();
-    qDebug() << "Get new connection " << hostAddr.toString();
-    bufferSocket->deleteLater();
     udpSocket = new QUdpSocket(this);
     udpSocket->bind(hostAddr, port);
     blockSize = 0;

@@ -10,10 +10,9 @@ FakeDaemon::FakeDaemon(QThread *guiThread, QString configPath)
     tcpCommunicator->setPort(START_PORT_INT);
     tcpCommunicator->listen();
     udpCommunicator->setPort(START_PORT_INT);
-    udpCommunicator->listen();
-    connect(udpCommunicator, SIGNAL(newConnection()), this, SLOT(startTelemetry()));
-    connect(udpCommunicator, SIGNAL(recieveMessage(QString)), this, SLOT(parseMessage(QString)));
-    connect(udpCommunicator, SIGNAL(lostConnection()), this, SLOT(closeTelemetry()));
+    connect(tcpCommunicator, SIGNAL(newConnection()), this, SLOT(startTelemetry()));
+    connect(tcpCommunicator, SIGNAL(recieveMessage(QString)), this, SLOT(parseMessage(QString)));
+    connect(tcpCommunicator, SIGNAL(lostConnection()), this, SLOT(closeTelemetry()));
 
     fakeGyroObserver = new FakeGyroObserver(GYROSCOPE_NAME, this);
     fakeGyroObserver->setUpdateInterval(SENSORS3D_DATA_UPDATE_PERIOD);
@@ -80,11 +79,11 @@ void FakeDaemon::attach(FakeObserver *fakeObs)
 
 void FakeDaemon::startTelemetry()
 {
-    udpCommunicator->send(TelemetryConst::SEND_FROM_DAEMON_MESSAGE());
-
+    tcpCommunicator->send(TelemetryConst::SEND_FROM_DAEMON_MESSAGE());
+    qDebug() << "Telemetry started";
     timer.stop();
     connect(&timer, SIGNAL(timeout()), this, SLOT(zipPackage()));
-    timer.start(updatePeriod);
+    timer.start(1000);
 
 }
 
@@ -95,8 +94,6 @@ void FakeDaemon::zipPackage()
 
     for (int i = 0; i < fakeObservers.size(); i++)
     {
-        if (fakeObservers[i]->subscribed() && fakeObservers[i]->freshData())
-        {
             QVector<float> data = fakeObservers[i]->getValue();
             QString dataString;
             for (int j = 0; j < data.size() - 1; j++)
@@ -104,13 +101,12 @@ void FakeDaemon::zipPackage()
             dataString += QString::number(data[data.size() - 1]) + ";";
             QString obsMessage = fakeObservers[i]->getName() + ":" + dataString;
             package += obsMessage;
-        }
     }
+    qDebug() << package ;
     if (package.size() > 0)
     {
-        qDebug() << package ;
         elapsedTimer.start();
-        udpCommunicator->send(package);
+        tcpCommunicator->send(package);
         qDebug() << "Package send took " << elapsedTimer.elapsed() << "milliseconds";
     }
 

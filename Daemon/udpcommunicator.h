@@ -11,7 +11,7 @@ class UdpCommunicator : public ICommunicator
 public:
     explicit UdpCommunicator();
     void setPort(int port);
-    void listen();
+    void setHostAddr(QHostAddress hostAddress);
 
 signals:
     void newConnection();

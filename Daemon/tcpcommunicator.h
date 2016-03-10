@@ -12,6 +12,7 @@ public:
     explicit TcpCommunicator();
     void setPort(int port);
     void listen();
+    QHostAddress getHostAddress();
 
 signals:
     void newConnection();
@@ -29,7 +30,7 @@ private slots:
 private:
     QHostAddress hostAddr;
     int         port;
-    QTcpServer* server;
-    QTcpSocket* socket;
+    QTcpServer* tcpServer;
+    QTcpSocket* tcpSocket;
     quint16     blockSize;
 };

@@ -8,13 +8,18 @@ TcpCommunicator::TcpCommunicator() :
 
 void TcpCommunicator::listen()
 {
-    server = new QTcpServer(this);
-    if (!server->listen(QHostAddress::Any, port))
+    tcpServer = new QTcpServer(this);
+    if (!tcpServer->listen(QHostAddress::Any, port))
     {
-        qDebug()<<"Unable to start the server: " << server->errorString();
-        server->close();
+        qDebug()<<"Unable to start the server: " << tcpServer->errorString();
+        tcpServer->close();
     }
-    connect(server, SIGNAL(newConnection()), this, SLOT(setConnection()));
+    connect(tcpServer, SIGNAL(newConnection()), this, SLOT(setConnection()));
+}
+
+QHostAddress TcpCommunicator::getHostAddress()
+{
+    return hostAddr;
 }
 
 void TcpCommunicator::setPort(int numPort)
@@ -24,18 +29,19 @@ void TcpCommunicator::setPort(int numPort)
 
 void TcpCommunicator::setConnection()
 {
-    socket = server->nextPendingConnection();
-    socket->setSocketOption(QAbstractSocket::LowDelayOption, 1);
+    tcpSocket = tcpServer->nextPendingConnection();
+    tcpSocket->setSocketOption(QAbstractSocket::LowDelayOption, 1);
+    hostAddr = tcpSocket->peerAddress();
     blockSize = 0;
-    connect(socket, SIGNAL(readyRead()), this, SLOT(read()));
-//    connect(socket, SIGNAL(disconnected()), socket, SLOT(deleteLater()));
-    connect(socket, SIGNAL(disconnected()), this, SLOT(abortConnection()));
+    connect(tcpSocket, SIGNAL(readyRead()), this, SLOT(read()));
+//    connect(tcpSocket, SIGNAL(disconnected()), tcpSocket, SLOT(deleteLater()));
+    connect(tcpSocket, SIGNAL(disconnected()), this, SLOT(abortConnection()));
     emit newConnection();
 }
 
 void TcpCommunicator::abortConnection()
 {
-    socket->disconnectFromHost();
+    tcpSocket->disconnectFromHost();
     emit lostConnection();
 }
 
@@ -48,12 +54,12 @@ void TcpCommunicator::send(QString message)
     out << message;
     out.device()->seek(0);
     out << (quint16)(block.size() - sizeof(quint16));
-    socket->write(block);
+    tcpSocket->write(block);
 }
 
 void TcpCommunicator::read()
 {
-    QDataStream in(socket);
+    QDataStream in(tcpSocket);
     in.setVersion(QDataStream::Qt_4_0);
     QString message;
 
@@ -61,13 +67,13 @@ void TcpCommunicator::read()
     {
         if (!blockSize)
         {
-            if (socket->bytesAvailable() < sizeof(quint16))
+            if (tcpSocket->bytesAvailable() < sizeof(quint16))
             {
                 break;
             }
             in >> blockSize;
         }
-        if (socket->bytesAvailable() < blockSize)
+        if (tcpSocket->bytesAvailable() < blockSize)
         {
             break;
         }

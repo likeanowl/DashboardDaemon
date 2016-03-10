@@ -8,7 +8,7 @@ class ICommunicator : public QObject
 
 public:
     virtual void setPort(int port) = 0;
-    virtual void listen() = 0;
+
 signals:
     void newConnection();
     void lostConnection();
