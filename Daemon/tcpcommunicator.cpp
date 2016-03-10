@@ -1,7 +1,6 @@
 #include "tcpcommunicator.h"
 
-TcpCommunicator::TcpCommunicator(QObject *parent) :
-    QObject(parent),
+TcpCommunicator::TcpCommunicator() :
     port(START_PORT_INT),
     blockSize(0)
 {
@@ -10,7 +9,8 @@ TcpCommunicator::TcpCommunicator(QObject *parent) :
 void TcpCommunicator::listen()
 {
     server = new QTcpServer(this);
-    if (!server->listen(QHostAddress::Any, port)) {
+    if (!server->listen(QHostAddress::Any, port))
+    {
         qDebug()<<"Unable to start the server: " << server->errorString();
         server->close();
     }
@@ -26,7 +26,6 @@ void TcpCommunicator::setConnection()
 {
     socket = server->nextPendingConnection();
     socket->setSocketOption(QAbstractSocket::LowDelayOption, 1);
-
     blockSize = 0;
     connect(socket, SIGNAL(readyRead()), this, SLOT(read()));
 //    connect(socket, SIGNAL(disconnected()), socket, SLOT(deleteLater()));

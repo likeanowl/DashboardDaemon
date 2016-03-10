@@ -1,9 +1,8 @@
 #include "udpcommunicator.h"
 #include <QTcpSocket>
 
-UdpCommunicator::UdpCommunicator(QObject *parent) :
-    QObject(parent),
-    port(1221),
+UdpCommunicator::UdpCommunicator() :
+    port(START_PORT_INT),
     blockSize(0)
 {
 }
@@ -11,11 +10,12 @@ UdpCommunicator::UdpCommunicator(QObject *parent) :
 void UdpCommunicator::listen()
 {
     tcpServer = new QTcpServer(this);
-    if (!tcpServer->listen(QHostAddress::Any, port)) {
+    if (!tcpServer->listen(QHostAddress::Any, port))
+    {
         qDebug()<<"Unable to start the server: " << tcpServer->errorString();
         tcpServer->close();
     }
-    connect(tcpServer, SIGNAL(newConnection()), this, SLOT(bindSocket()));
+    connect(tcpServer, SIGNAL(newConnection()), this, SLOT(setConnection()));
 }
 
 void UdpCommunicator::setPort(int numPort)
@@ -23,7 +23,7 @@ void UdpCommunicator::setPort(int numPort)
     port = numPort;
 }
 
-void UdpCommunicator::bindSocket()
+void UdpCommunicator::setConnection()
 {
     QTcpSocket *bufferSocket = tcpServer->nextPendingConnection();
     hostAddr = bufferSocket->peerAddress();
@@ -32,7 +32,7 @@ void UdpCommunicator::bindSocket()
     udpSocket = new QUdpSocket(this);
     udpSocket->bind(hostAddr, port);
     blockSize = 0;
-    connect(udpSocket, SIGNAL(readyRead()), this, SLOT(readNextDatagram()));
+    connect(udpSocket, SIGNAL(readyRead()), this, SLOT(read()));
     connect(udpSocket, SIGNAL(disconnected()), this, SLOT(abortConnection()));
     emit newConnection();
 }
@@ -55,7 +55,7 @@ void UdpCommunicator::send(QString message)
     udpSocket->writeDatagram(block, hostAddr, port);
 }
 
-void UdpCommunicator::readNextDatagram()
+void UdpCommunicator::read()
 {
     while (udpSocket->hasPendingDatagrams())
     {

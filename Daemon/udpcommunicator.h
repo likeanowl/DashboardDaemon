@@ -1,15 +1,15 @@
 #pragma once
 #include "telemetry_const.h"
-#include <QObject>
 #include <QTcpServer>
 #include <QUdpSocket>
 #include <QDataStream>
+#include <icommunicator.h>
 
-class UdpCommunicator : public QObject
+class UdpCommunicator : public ICommunicator
 {
     Q_OBJECT
 public:
-    explicit UdpCommunicator(QObject *parent = 0);
+    explicit UdpCommunicator();
     void setPort(int port);
     void listen();
 
@@ -22,9 +22,9 @@ public slots:
     void send(QString);
 
 private slots:
-    void bindSocket();
+    void setConnection();
     void abortConnection();
-    void readNextDatagram();
+    void read();
 
 private:
     int         port;

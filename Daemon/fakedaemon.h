@@ -7,6 +7,7 @@
 #include "fakeobserver.h"
 #include "tcpcommunicator.h"
 #include "udpcommunicator.h"
+#include <icommunicator.h>
 #include <QElapsedTimer>
 
 class FakeObserver;
@@ -36,8 +37,8 @@ private slots:
     void parseMessage(QString message);
 
 private:
-    TcpCommunicator tcpCommunicator;
-    UdpCommunicator udpCommunicator;
+    TcpCommunicator* tcpCommunicator;
+    UdpCommunicator* udpCommunicator;
     QVector<FakeObserver *> fakeObservers;
     FakeGyroObserver* fakeGyroObserver;
     FakeAccelObserver* fakeAccelObserver;

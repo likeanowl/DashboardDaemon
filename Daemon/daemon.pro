@@ -41,7 +41,8 @@ HEADERS += \
     telemetry_const.h \
     fakeobserver.h \
     fakedaemon.h \
-    udpcommunicator.h
+    udpcommunicator.h \
+    icommunicator.h
     #daemon.h \
     #observer.h
 

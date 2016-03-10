@@ -1,15 +1,15 @@
 #pragma once
 #include "telemetry_const.h"
-#include <QObject>
 #include <QTcpServer>
 #include <QTcpSocket>
 #include <QDataStream>
+#include <icommunicator.h>
 
-class TcpCommunicator : public QObject
+class TcpCommunicator : public ICommunicator
 {
     Q_OBJECT
 public:
-    explicit TcpCommunicator(QObject *parent = 0);
+    explicit TcpCommunicator();
     void setPort(int port);
     void listen();
 
@@ -27,6 +27,7 @@ private slots:
     void read();
 
 private:
+    QHostAddress hostAddr;
     int         port;
     QTcpServer* server;
     QTcpSocket* socket;
