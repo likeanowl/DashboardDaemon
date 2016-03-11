@@ -15,16 +15,17 @@ void UdpCommunicator::setPort(int numPort)
 void UdpCommunicator::setHostAddr(QHostAddress hostAddress)
 {
     hostAddr = hostAddress;
+    this->setConnection();
 }
 
 void UdpCommunicator::setConnection()
 {
     udpSocket = new QUdpSocket(this);
     udpSocket->bind(hostAddr, port);
+    qDebug() << "Socked binded to " << hostAddr.toString() << " " << port;
     blockSize = 0;
     connect(udpSocket, SIGNAL(readyRead()), this, SLOT(read()));
     connect(udpSocket, SIGNAL(disconnected()), this, SLOT(abortConnection()));
-    emit newConnection();
 }
 
 void UdpCommunicator::abortConnection()
@@ -37,7 +38,7 @@ void UdpCommunicator::send(QString message)
 {
     QByteArray block;
     QDataStream out(&block, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_8);
+    out.setVersion(QDataStream::Qt_4_0);
     out << (quint16)0;
     out << message;
     out.device()->seek(0);

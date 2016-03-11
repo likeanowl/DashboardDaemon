@@ -9,7 +9,7 @@ FakeDaemon::FakeDaemon(QThread *guiThread, QString configPath)
     udpCommunicator = new UdpCommunicator();
     tcpCommunicator->setPort(START_PORT_INT);
     tcpCommunicator->listen();
-    udpCommunicator->setPort(START_PORT_INT);
+    udpCommunicator->setPort(1222);
     connect(tcpCommunicator, SIGNAL(newConnection()), this, SLOT(startTelemetry()));
     connect(tcpCommunicator, SIGNAL(recieveMessage(QString)), this, SLOT(parseMessage(QString)));
     connect(tcpCommunicator, SIGNAL(lostConnection()), this, SLOT(closeTelemetry()));
@@ -79,11 +79,12 @@ void FakeDaemon::attach(FakeObserver *fakeObs)
 
 void FakeDaemon::startTelemetry()
 {
+    udpCommunicator->setHostAddr(tcpCommunicator->getHostAddress());
     tcpCommunicator->send(TelemetryConst::SEND_FROM_DAEMON_MESSAGE());
     qDebug() << "Telemetry started";
     timer.stop();
     connect(&timer, SIGNAL(timeout()), this, SLOT(zipPackage()));
-    timer.start(1000);
+    timer.start(updatePeriod);
 
 }
 

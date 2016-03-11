@@ -54,6 +54,7 @@ void TcpCommunicator::send(QString message)
     out << message;
     out.device()->seek(0);
     out << (quint16)(block.size() - sizeof(quint16));
+    qDebug() << new QString(block);
     tcpSocket->write(block);
 }
 

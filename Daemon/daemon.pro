@@ -34,8 +34,8 @@ SOURCES += main.cpp \
     fakeobserver.cpp \
     fakedaemon.cpp \
     udpcommunicator.cpp
-    #daemon.cpp \
-    #observer.cpp
+#    daemon.cpp
+#    observer.cpp
 HEADERS += \
     tcpcommunicator.h \
     telemetry_const.h \
@@ -43,8 +43,8 @@ HEADERS += \
     fakedaemon.h \
     udpcommunicator.h \
     icommunicator.h
-    #daemon.h \
-    #observer.h
+#    daemon.h \
+#    observer.h
 
 unix {
     target.path = /usr/lib
