@@ -1,12 +1,12 @@
 #pragma once
-#include "telemetry_const.h"
 
+#include <telemetry_const.h>
 #include <QObject>
 #include <QVector>
 #include <QTimer>
-#include </home/likeanowl/trikRuntime/trikControl/include/trikControl/brickInterface.h>
-#include "observer.h"
-#include "tcpcommunicator.h"
+#include <brickInterface.h>
+#include <observer.h>
+#include <tcpcommunicator.h>
 
 using namespace trikControl;
 

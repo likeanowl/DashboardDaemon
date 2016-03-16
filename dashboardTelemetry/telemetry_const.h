@@ -1,5 +1,4 @@
 #pragma once
-
 #include <QObject>
 #include <QString>
 #include <QKeySequence>
@@ -21,6 +20,12 @@ public:
     static QString const ENCODER2_TITLE() { return tr("Encoder 1"); }
     static QString const ENCODER3_TITLE() { return tr("Encoder 2"); }
     static QString const ENCODER4_TITLE() { return tr("Encoder 3"); }
+
+    //widgets names
+    static QString const PLOT_TITLE() { return tr("Plot"); }
+    static QString const LCDNUMBER_TITLE() { return tr("LCD Number"); }
+    static QString const PROGRESSBAR_TITLE() { return tr("Progress bar"); }
+    static QString const TABLE_TITLE() { return tr("Table"); }
 
     //user messages
     static QString const SHOW_HIDE_TEXT() { return tr("Use Ctrl+Q for show/hide menu"); }
@@ -51,7 +56,9 @@ int const BATTERY_DATA_UPDATE_PERIOD = 1000;
 
 //dashboard numbers
 int const WAITING_RESPONSE_TIME = 5000;
-int const TOOLBAR_WIDTH = 135;
+int const TOOLBAR_WIDTH = 150;
+int const IPTEXT_HEIGHT = 24;
+int const PORTTEXT_HEIGHT = 24;
 QSize const PANEL_START_SIZE = QSize(800, 600);
 QSize const PANEL_MIN_SIZE = QSize(640, 480);
 

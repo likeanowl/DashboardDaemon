@@ -1,4 +1,4 @@
-#include "fakeobserver.h"
+#include <fakeobserver.h>
 #include <QDebug>
 
 FakeObserver::FakeObserver(QString devName, FakeDaemon* fakeDaemon)
@@ -18,7 +18,7 @@ void FakeGyroObserver::update()
     {
         return;
     }
-    QVector<int> temp = {10, 10, 10};
+    QVector<int> temp = {rand() % 20 + 10, rand() % 20 + 10, rand() % 20 + 10};
     QVector<float> out;
     int n = temp.size();
     for (int i = 0; i < n; i++)
@@ -36,7 +36,7 @@ void FakeAccelObserver::update()
     {
         return;
     }
-    QVector<int> temp = {10, 10, 10};
+    QVector<int> temp = {rand() % 10 + 10, rand() % 10 + 10, rand() % 10 + 10};
     QVector<float> out;
     int n = temp.size();
     for (int i = 0; i < n; i++)
@@ -55,7 +55,7 @@ void FakeBatteryObserver::update()
         return;
     }
     QVector<float> temp;
-    temp << 14;
+    temp << rand() % 10 + 10;
     value = temp;
 }
 
@@ -67,7 +67,7 @@ void FakePowerMotorObserver::update()
         return;
     }
     QVector<float> temp;
-    temp << 15;
+    temp << rand() % 10 + 10;
     value = temp;
 }
 
@@ -79,6 +79,6 @@ void FakeEncoderObserver::update()
         return;
     }
     QVector<float> temp;
-    temp << 16;
+    temp << rand() % 10 + 10;
     value = temp;
 }

@@ -1,8 +1,10 @@
 #pragma once
-#include "telemetry_const.h"
-#include "fakedaemon.h"
+
+#include <telemetry_const.h>
+#include <fakedaemon.h>
 #include <QObject>
 #include <QTimer>
+#include <random>
 
 class FakeDaemon;
 

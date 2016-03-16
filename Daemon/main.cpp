@@ -25,6 +25,5 @@ int main(int argc, char *argv[])
 
     //Daemon daemon(app.thread(), configPath);
     FakeDaemon fakeDaemon(app.thread(), configPath);
-
     return app.exec();
 }

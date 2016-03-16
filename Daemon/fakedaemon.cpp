@@ -1,4 +1,4 @@
-#include "fakedaemon.h"
+#include <fakedaemon.h>
 #include <QDebug>
 #include <QStringList>
 
@@ -9,7 +9,7 @@ FakeDaemon::FakeDaemon(QThread *guiThread, QString configPath)
     udpCommunicator = new UdpCommunicator();
     tcpCommunicator->setPort(START_PORT_INT);
     tcpCommunicator->listen();
-    udpCommunicator->setPort(1222);
+    udpCommunicator->setPort(START_PORT_INT);
     connect(tcpCommunicator, SIGNAL(newConnection()), this, SLOT(startTelemetry()));
     connect(tcpCommunicator, SIGNAL(recieveMessage(QString)), this, SLOT(parseMessage(QString)));
     connect(tcpCommunicator, SIGNAL(lostConnection()), this, SLOT(closeTelemetry()));
@@ -45,6 +45,7 @@ FakeDaemon::FakeDaemon(QThread *guiThread, QString configPath)
 
 void FakeDaemon::testSensors(int times)
 {
+    qDebug() << "Testing sensors";
     for (int j = 0; j < times; j++)
     {
         for (int i = 0; i < fakeObservers.size(); i++)
@@ -80,6 +81,7 @@ void FakeDaemon::attach(FakeObserver *fakeObs)
 void FakeDaemon::startTelemetry()
 {
     udpCommunicator->setHostAddr(tcpCommunicator->getHostAddress());
+    qDebug() << udpCommunicator->getHostAddr().toString();
     tcpCommunicator->send(TelemetryConst::SEND_FROM_DAEMON_MESSAGE());
     qDebug() << "Telemetry started";
     timer.stop();
@@ -92,9 +94,19 @@ void FakeDaemon::zipPackage()
 {
     QString package;
     QElapsedTimer elapsedTimer;
-
-    for (int i = 0; i < fakeObservers.size(); i++)
+    if (count == 500)
     {
+        qDebug() << count << "Packages with size" << pckgSize << "bytes send took " << elapsedTimer.elapsed() << "milliseconds";
+        count = 0;
+    }
+    if (count == 0)
+    {
+        elapsedTimer.start();
+    }
+    //for (int j = 0; j < int(pckgSize / 75); j++)
+    //{
+        for (int i = 0; i < fakeObservers.size(); i++)
+        {
             QVector<float> data = fakeObservers[i]->getValue();
             QString dataString;
             for (int j = 0; j < data.size() - 1; j++)
@@ -102,15 +114,13 @@ void FakeDaemon::zipPackage()
             dataString += QString::number(data[data.size() - 1]) + ";";
             QString obsMessage = fakeObservers[i]->getName() + ":" + dataString;
             package += obsMessage;
-    }
-    qDebug() << package ;
+        }
+    //}
     if (package.size() > 0)
     {
-        elapsedTimer.start();
-        tcpCommunicator->send(package);
-        qDebug() << "Package send took " << elapsedTimer.elapsed() << "milliseconds";
+        udpCommunicator->send(package);
     }
-
+    count++;
 }
 
 void FakeDaemon::parseMessage(QString message)

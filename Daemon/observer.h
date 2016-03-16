@@ -1,7 +1,8 @@
 #pragma once
-#include "telemetry_const.h"
-#include </home/likeanowl/trikRuntime/trikControl/include/trikControl/brickInterface.h>
-#include "daemon.h"
+
+#include <telemetry_const.h>
+#include <brickInterface.h>
+#include <daemon.h>
 #include <QObject>
 #include <QTimer>
 

@@ -1,5 +1,5 @@
-#include "udpcommunicator.h"
-#include <QTcpSocket>
+#include <udpcommunicator.h>
+#include <QUdpSocket>
 
 UdpCommunicator::UdpCommunicator() :
     port(START_PORT_INT),
@@ -18,11 +18,15 @@ void UdpCommunicator::setHostAddr(QHostAddress hostAddress)
     this->setConnection();
 }
 
+QHostAddress UdpCommunicator::getHostAddr()
+{
+    return hostAddr;
+}
+
 void UdpCommunicator::setConnection()
 {
     udpSocket = new QUdpSocket(this);
     udpSocket->bind(hostAddr, port);
-    qDebug() << "Socked binded to " << hostAddr.toString() << " " << port;
     blockSize = 0;
     connect(udpSocket, SIGNAL(readyRead()), this, SLOT(read()));
     connect(udpSocket, SIGNAL(disconnected()), this, SLOT(abortConnection()));
@@ -36,13 +40,7 @@ void UdpCommunicator::abortConnection()
 
 void UdpCommunicator::send(QString message)
 {
-    QByteArray block;
-    QDataStream out(&block, QIODevice::WriteOnly);
-    out.setVersion(QDataStream::Qt_4_0);
-    out << (quint16)0;
-    out << message;
-    out.device()->seek(0);
-    out << (quint16)(block.size() - sizeof(quint16));
+    QByteArray block(message.toStdString().c_str());
     udpSocket->writeDatagram(block, hostAddr, port);
 }
 
@@ -57,26 +55,4 @@ void UdpCommunicator::read()
         qDebug() << message;
         emit recieveMessage(message);
     }
-    /*QDataStream in(udpSocket);
-    in.setVersion(QDataStream::Qt_4_0);
-    QString message;
-
-    for (;;)
-    {
-        if (!blockSize)
-        {
-            if (udpSocket->bytesAvailable() < sizeof(quint16))
-            {
-                break;
-            }
-            in >> blockSize;
-        }
-        if (udpSocket->bytesAvailable() < blockSize)
-        {
-            break;
-        }
-        in >> message;
-        blockSize = 0;
-        emit recieveMessage(message);
-    }*/
 }

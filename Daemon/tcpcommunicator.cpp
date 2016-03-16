@@ -1,4 +1,4 @@
-#include "tcpcommunicator.h"
+#include <tcpcommunicator.h>
 
 TcpCommunicator::TcpCommunicator() :
     port(START_PORT_INT),
@@ -34,7 +34,6 @@ void TcpCommunicator::setConnection()
     hostAddr = tcpSocket->peerAddress();
     blockSize = 0;
     connect(tcpSocket, SIGNAL(readyRead()), this, SLOT(read()));
-//    connect(tcpSocket, SIGNAL(disconnected()), tcpSocket, SLOT(deleteLater()));
     connect(tcpSocket, SIGNAL(disconnected()), this, SLOT(abortConnection()));
     emit newConnection();
 }
@@ -54,7 +53,6 @@ void TcpCommunicator::send(QString message)
     out << message;
     out.device()->seek(0);
     out << (quint16)(block.size() - sizeof(quint16));
-    qDebug() << new QString(block);
     tcpSocket->write(block);
 }
 

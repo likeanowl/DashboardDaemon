@@ -1,7 +1,7 @@
-#include "daemon.h"
+#include <daemon.h>
 #include <QDebug>
 #include <QStringList>
-#include </home/likeanowl/trikRuntime/trikControl/include/trikControl/brickFactory.h>
+#include <brickFactory.h>
 
 Daemon::Daemon(QThread *guiThread, QString configPath) :
     brick(trikControl::BrickFactory::create())

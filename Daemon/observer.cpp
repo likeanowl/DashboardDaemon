@@ -1,4 +1,4 @@
-#include "observer.h"
+#include <observer.h>
 #include <QDebug>
 
 Observer::Observer(QString devName, BrickInterface *brick, Daemon* daemon)

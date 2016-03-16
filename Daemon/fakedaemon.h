@@ -1,12 +1,12 @@
 #pragma once
-#include "telemetry_const.h"
 
+#include <telemetry_const.h>
 #include <QObject>
 #include <QVector>
 #include <QTimer>
-#include "fakeobserver.h"
-#include "tcpcommunicator.h"
-#include "udpcommunicator.h"
+#include <fakeobserver.h>
+#include <tcpcommunicator.h>
+#include <udpcommunicator.h>
 #include <icommunicator.h>
 #include <QElapsedTimer>
 
@@ -54,5 +54,7 @@ private:
 
     QTimer timer;
 
+    int pckgSize = 75;
+    int count = 0;
     int updatePeriod;
 };

@@ -1,6 +1,6 @@
 #pragma once
-#include "telemetry_const.h"
-#include <QTcpServer>
+
+#include <telemetry_const.h>
 #include <QUdpSocket>
 #include <QDataStream>
 #include <icommunicator.h>
@@ -12,6 +12,7 @@ public:
     explicit UdpCommunicator();
     void setPort(int port);
     void setHostAddr(QHostAddress hostAddress);
+    QHostAddress getHostAddr();
 
 signals:
     void newConnection();
@@ -28,7 +29,6 @@ private slots:
 
 private:
     int         port;
-    QTcpServer* tcpServer;
     QUdpSocket* udpSocket;
     QHostAddress hostAddr;
     quint16     blockSize;
