@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-#TRIKCONTROL_BINDIR = /home/likeanowl/trikRuntime/bin/arm-release
+TRIKCONTROL_BINDIR = /home/likeanowl/trikRuntime/bin/arm-release
 TRIKCONTROL_DIR = ../../trikRuntime/trikControl
 
 QT       += core gui
@@ -25,7 +25,7 @@ INCLUDEPATH = \
 
 INCLUDEPATH += /home/likeanowl/trikRuntime/trikControl/include/trikControl
 
-#LIBS += -L$$TRIKCONTROL_BINDIR -ltrikControl -ltrikKernel -lqslog -ltrikHal
+LIBS += -L$$TRIKCONTROL_BINDIR -ltrikControl -ltrikKernel -lqslog -ltrikHal
 
 !macx {
         QMAKE_LFLAGS += -Wl,-O1,-rpath,.
@@ -35,18 +35,18 @@ SOURCES += main.cpp \
     tcpcommunicator.cpp \
     fakeobserver.cpp \
     fakedaemon.cpp \
-    udpcommunicator.cpp
-#   daemon.cpp \
-#   observer.cpp
+    udpcommunicator.cpp \
+    daemon.cpp \
+    observer.cpp
 HEADERS += \
     tcpcommunicator.h \
     telemetry_const.h \
     fakeobserver.h \
     fakedaemon.h \
     udpcommunicator.h \
-    icommunicator.h
-#   daemon.h \
-#   observer.h
+    icommunicator.h \
+    daemon.h \
+    observer.h
 
 unix {
     target.path = /usr/lib

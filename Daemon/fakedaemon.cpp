@@ -103,8 +103,8 @@ void FakeDaemon::zipPackage()
     {
         elapsedTimer.start();
     }
-    //for (int j = 0; j < int(pckgSize / 75); j++)
-    //{
+    for (int j = 0; j < int(pckgSize / 75); j++)
+    {
         for (int i = 0; i < fakeObservers.size(); i++)
         {
             QVector<float> data = fakeObservers[i]->getValue();
@@ -114,11 +114,14 @@ void FakeDaemon::zipPackage()
             dataString += QString::number(data[data.size() - 1]) + ";";
             QString obsMessage = fakeObservers[i]->getName() + ":" + dataString;
             package += obsMessage;
+            fakeObservers[i]->subscribe();
+            fakeObservers[i]->update();
+            fakeObservers[i]->unsubscribe();
         }
-    //}
+    }
     if (package.size() > 0)
     {
-        udpCommunicator->send(package);
+        tcpCommunicator->send(package);
     }
     count++;
 }

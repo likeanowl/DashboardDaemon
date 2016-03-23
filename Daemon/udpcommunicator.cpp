@@ -26,7 +26,7 @@ QHostAddress UdpCommunicator::getHostAddr()
 void UdpCommunicator::setConnection()
 {
     udpSocket = new QUdpSocket(this);
-    udpSocket->bind(hostAddr, port);
+    udpSocket->bind(QHostAddress(START_IP_STRING), port);
     blockSize = 0;
     connect(udpSocket, SIGNAL(readyRead()), this, SLOT(read()));
     connect(udpSocket, SIGNAL(disconnected()), this, SLOT(abortConnection()));

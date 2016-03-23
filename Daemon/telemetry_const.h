@@ -56,7 +56,7 @@ QSize const PANEL_START_SIZE = QSize(800, 600);
 QSize const PANEL_MIN_SIZE = QSize(640, 480);
 
 //wi-fi
-QString const START_IP_STRING = "192.168.1.34";
+QString const START_IP_STRING = "192.168.77.1";
 QString const START_PORT_STRING = "1221";
 int const START_PORT_INT = 1221;
 

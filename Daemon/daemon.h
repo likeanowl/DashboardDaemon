@@ -7,6 +7,7 @@
 #include <brickInterface.h>
 #include <observer.h>
 #include <tcpcommunicator.h>
+#include <udpcommunicator.h>
 
 using namespace trikControl;
 
@@ -38,7 +39,8 @@ private slots:
 
 private:
     BrickInterface *brick;
-    TcpCommunicator tcpCommunicator;
+    TcpCommunicator *tcpCommunicator;
+    UdpCommunicator *udpCommunicator;
     QVector<Observer *> observers;
     GyroObserver *gyroObserver;
     AccelObserver *accelObserver;

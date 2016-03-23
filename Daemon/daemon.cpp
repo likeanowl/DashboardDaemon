@@ -8,12 +8,14 @@ Daemon::Daemon(QThread *guiThread, QString configPath) :
 
 {
     updatePeriod = TCP_PEDIOD;
-
-    tcpCommunicator.setPort(START_PORT_INT);
-    tcpCommunicator.listen();
-    connect(&tcpCommunicator, SIGNAL(newConnection()), this, SLOT(startTelemetry()));
-    connect(&tcpCommunicator, SIGNAL(recieveMessage(QString)), this, SLOT(parseMessage(QString)));
-    connect(&tcpCommunicator, SIGNAL(lostConnection()), this, SLOT(closeTelemetry()));
+    tcpCommunicator = new TcpCommunicator();
+    udpCommunicator = new UdpCommunicator();
+    tcpCommunicator->setPort(START_PORT_INT);
+    udpCommunicator->setPort(START_PORT_INT);
+    tcpCommunicator->listen();
+    connect(tcpCommunicator, SIGNAL(newConnection()), this, SLOT(startTelemetry()));
+    connect(tcpCommunicator, SIGNAL(recieveMessage(QString)), this, SLOT(parseMessage(QString)));
+    connect(tcpCommunicator, SIGNAL(lostConnection()), this, SLOT(closeTelemetry()));
 
     gyroObserver = new GyroObserver(GYROSCOPE_NAME, brick, this);
     gyroObserver->setUpdateInterval(SENSORS3D_DATA_UPDATE_PERIOD);
@@ -91,8 +93,8 @@ void Daemon::attach(Observer *obs)
 
 void Daemon::startTelemetry()
 {
-    tcpCommunicator.send(TelemetryConst::SEND_FROM_DAEMON_MESSAGE());
-
+    tcpCommunicator->send(TelemetryConst::SEND_FROM_DAEMON_MESSAGE());
+    udpCommunicator->setHostAddr(tcpCommunicator->getHostAddress());
     timer.stop();
     connect(&timer, SIGNAL(timeout()), this, SLOT(zipPackage()));
     timer.start(updatePeriod);
@@ -119,7 +121,7 @@ void Daemon::zipPackage()
     if (package.size() > 0)
     {
         qDebug() << package ;
-        tcpCommunicator.send(package);
+        udpCommunicator->send(package);
     }
 
 }
