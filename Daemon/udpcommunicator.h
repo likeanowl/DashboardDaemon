@@ -1,9 +1,9 @@
 #pragma once
 
-#include <telemetry_const.h>
 #include <QUdpSocket>
 #include <QDataStream>
-#include <icommunicator.h>
+#include "icommunicator.h"
+#include "telemetry_const.h"
 
 class UdpCommunicator : public ICommunicator
 {

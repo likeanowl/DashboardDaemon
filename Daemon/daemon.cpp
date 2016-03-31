@@ -1,8 +1,13 @@
-#include <daemon.h>
 #include <QDebug>
 #include <QStringList>
-#include <brickFactory.h>
+#include "brickFactory.h"
+#include "daemon.h"
 
+/**
+ * @brief Constructor
+ * @param guiThread
+ * @param configPath
+ */
 Daemon::Daemon(QThread *guiThread, QString configPath) :
     brick(trikControl::BrickFactory::create())
 
@@ -39,11 +44,8 @@ Daemon::Daemon(QThread *guiThread, QString configPath) :
     powerMotor4 = new PowerMotorObserver(POWER_MOTOR4_NAME, brick, this);
     powerMotor4->setUpdateInterval(MOTOR_DATA_UPDATE_PERIOD);
 
-    /*
-    encoder1 = new EncoderObserver(ENCODER1_NAME, &brick, this);
+    encoder1 = new EncoderObserver(ENCODER1_NAME, brick, this);
     encoder1->setUpdateInterval(ENCODER_DATA_UPDATE_PERIOD);
-    */
-
     encoder2 = new EncoderObserver(ENCODER2_NAME, brick, this);
     encoder2->setUpdateInterval(ENCODER_DATA_UPDATE_PERIOD);
     encoder3 = new EncoderObserver(ENCODER3_NAME, brick, this);
@@ -57,6 +59,10 @@ Daemon::Daemon(QThread *guiThread, QString configPath) :
     testSensors(2);
 }
 
+/**
+ * @brief Checking if all observers connected to controller sensors and prints data from them twice
+ * @param times
+ */
 void Daemon::testSensors(int times)
 {
     for (int j = 0; j < times; j++)
@@ -71,6 +77,9 @@ void Daemon::testSensors(int times)
     }
 }
 
+/**
+ * @brief Closing telemetry connection if client disconnected from server
+ */
 void Daemon::closeTelemetry()
 {
     qDebug() << "TELEMETRY CLOSED";
@@ -80,17 +89,27 @@ void Daemon::closeTelemetry()
         observers[i]->unsubscribe();
 }
 
+/**
+ * @brief Updating sensors data
+ */
 void Daemon::notify()
 {
     for (int i = 0; i < observers.size(); i++)
         observers[i]->update();
 }
 
+/**
+ * @brief Attaching an observer to related sensor
+ * @param obs
+ */
 void Daemon::attach(Observer *obs)
 {
     observers.push_back(obs);
 }
 
+/**
+ * @brief Starting Telemetry
+ */
 void Daemon::startTelemetry()
 {
     tcpCommunicator->send(TelemetryConst::SEND_FROM_DAEMON_MESSAGE());
@@ -101,31 +120,34 @@ void Daemon::startTelemetry()
 
 }
 
+/**
+ * @brief Converting data from sensors and trying to send it
+ */
 void Daemon::zipPackage()
 {
     QString package;
 
     for (int i = 0; i < observers.size(); i++)
     {
-        if (observers[i]->subscribed() && observers[i]->freshData())
-        {
-            QVector<float> data = observers[i]->getValue();
-            QString dataString;
-            for (int j = 0; j < data.size() - 1; j++)
-                dataString += QString::number(data[j]) + "*";
-            dataString += QString::number(data[data.size() - 1]) + ";";
-            QString obsMessage = observers[i]->getName() + ":" + dataString;
-            package += obsMessage;
-        }
+         QVector<float> data = observers[i]->getValue();
+         QString dataString;
+         for (int j = 0; j < data.size() - 1; j++)
+            dataString += QString::number(data[j]) + "*";
+         dataString += QString::number(data[data.size() - 1]) + ";";
+         QString obsMessage = observers[i]->getName() + ":" + dataString;
+         package += obsMessage;
     }
     if (package.size() > 0)
     {
-        qDebug() << package ;
         udpCommunicator->send(package);
     }
 
 }
 
+/**
+ * @brief Parsing incoming message
+ * @param message
+ */
 void Daemon::parseMessage(QString message)
 {
     qDebug() << message;

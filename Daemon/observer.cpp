@@ -1,6 +1,12 @@
-#include <observer.h>
 #include <QDebug>
+#include "observer.h"
 
+/**
+ * @brief Observer::Observer
+ * @param devName
+ * @param brick
+ * @param daemon
+ */
 Observer::Observer(QString devName, BrickInterface *brick, Daemon* daemon)
 {
     name = devName;
@@ -12,6 +18,9 @@ Observer::Observer(QString devName, BrickInterface *brick, Daemon* daemon)
     daemon->attach(this);
 }
 
+/**
+ * @brief GyroObserver::update
+ */
 void GyroObserver::update()
 {
     newData = true;
@@ -30,6 +39,9 @@ void GyroObserver::update()
     value = out;
 }
 
+/**
+ * @brief AccelObserver::update
+ */
 void AccelObserver::update()
 {
     newData = true;
@@ -48,6 +60,9 @@ void AccelObserver::update()
     value = out;
 }
 
+/**
+ * @brief BatteryObserver::update
+ */
 void BatteryObserver::update()
 {
     newData = true;
@@ -60,6 +75,9 @@ void BatteryObserver::update()
     value = temp;
 }
 
+/**
+ * @brief PowerMotorObserver::update
+ */
 void PowerMotorObserver::update()
 {
     newData = true;
@@ -72,6 +90,9 @@ void PowerMotorObserver::update()
     value = temp;
 }
 
+/**
+ * @brief EncoderObserver::update
+ */
 void EncoderObserver::update()
 {
     newData = true;

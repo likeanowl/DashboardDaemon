@@ -1,11 +1,17 @@
-#include <tcpcommunicator.h>
+#include "tcpcommunicator.h"
 
+/**
+ * @brief TcpCommunicator::TcpCommunicator
+ */
 TcpCommunicator::TcpCommunicator() :
     port(START_PORT_INT),
     blockSize(0)
 {
 }
 
+/**
+ * @brief Starting TCP server and waiting for incoming TCP connection
+ */
 void TcpCommunicator::listen()
 {
     tcpServer = new QTcpServer(this);
@@ -17,16 +23,27 @@ void TcpCommunicator::listen()
     connect(tcpServer, SIGNAL(newConnection()), this, SLOT(setConnection()));
 }
 
+/**
+ * @brief Getting Host Address of connected peer
+ * @return
+ */
 QHostAddress TcpCommunicator::getHostAddress()
 {
     return hostAddr;
 }
 
+/**
+ * @brief Setting port
+ * @param numPort
+ */
 void TcpCommunicator::setPort(int numPort)
 {
     port = numPort;
 }
 
+/**
+ * @brief Setting connection with peer initialized last connection
+ */
 void TcpCommunicator::setConnection()
 {
     tcpSocket = tcpServer->nextPendingConnection();
@@ -38,12 +55,19 @@ void TcpCommunicator::setConnection()
     emit newConnection();
 }
 
+/**
+ * @brief Aborts connection
+ */
 void TcpCommunicator::abortConnection()
 {
     tcpSocket->disconnectFromHost();
     emit lostConnection();
 }
 
+/**
+ * @brief Sending message via TCP
+ * @param message
+ */
 void TcpCommunicator::send(QString message)
 {
     QByteArray block;
@@ -56,6 +80,9 @@ void TcpCommunicator::send(QString message)
     tcpSocket->write(block);
 }
 
+/**
+ * @brief Reads incoming message
+ */
 void TcpCommunicator::read()
 {
     QDataStream in(tcpSocket);

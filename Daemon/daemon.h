@@ -1,13 +1,13 @@
 #pragma once
 
-#include <telemetry_const.h>
 #include <QObject>
 #include <QVector>
 #include <QTimer>
-#include <brickInterface.h>
-#include <observer.h>
-#include <tcpcommunicator.h>
-#include <udpcommunicator.h>
+#include "brickInterface.h"
+#include "observer.h"
+#include "tcpcommunicator.h"
+#include "udpcommunicator.h"
+#include "telemetry_const.h"
 
 using namespace trikControl;
 

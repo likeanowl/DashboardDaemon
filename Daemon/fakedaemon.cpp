@@ -1,7 +1,12 @@
-#include <fakedaemon.h>
 #include <QDebug>
 #include <QStringList>
+#include "fakedaemon.h"
 
+/**
+ * @brief Constructor
+ * @param guiThread
+ * @param configPath
+ */
 FakeDaemon::FakeDaemon(QThread *guiThread, QString configPath)
 {
     updatePeriod = TCP_PEDIOD;
@@ -43,6 +48,10 @@ FakeDaemon::FakeDaemon(QThread *guiThread, QString configPath)
     testSensors(2);
 }
 
+/**
+ * @brief FakeDaemon::testSensors
+ * @param times
+ */
 void FakeDaemon::testSensors(int times)
 {
     qDebug() << "Testing sensors";
@@ -58,6 +67,9 @@ void FakeDaemon::testSensors(int times)
     }
 }
 
+/**
+ * @brief FakeDaemon::closeTelemetry
+ */
 void FakeDaemon::closeTelemetry()
 {
     qDebug() << "TELEMETRY CLOSED";
@@ -67,17 +79,27 @@ void FakeDaemon::closeTelemetry()
         fakeObservers[i]->unsubscribe();
 }
 
+/**
+ * @brief FakeDaemon::notify
+ */
 void FakeDaemon::notify()
 {
     for (int i = 0; i < fakeObservers.size(); i++)
         fakeObservers[i]->update();
 }
 
+/**
+ * @brief FakeDaemon::attach
+ * @param fakeObs
+ */
 void FakeDaemon::attach(FakeObserver *fakeObs)
 {
     fakeObservers.push_back(fakeObs);
 }
 
+/**
+ * @brief FakeDaemon::startTelemetry
+ */
 void FakeDaemon::startTelemetry()
 {
     udpCommunicator->setHostAddr(tcpCommunicator->getHostAddress());
@@ -90,6 +112,9 @@ void FakeDaemon::startTelemetry()
 
 }
 
+/**
+ * @brief FakeDaemon::zipPackage
+ */
 void FakeDaemon::zipPackage()
 {
     QString package;
@@ -126,6 +151,10 @@ void FakeDaemon::zipPackage()
     count++;
 }
 
+/**
+ * @brief FakeDaemon::parseMessage
+ * @param message
+ */
 void FakeDaemon::parseMessage(QString message)
 {
     qDebug() << message;

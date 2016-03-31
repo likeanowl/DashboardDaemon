@@ -4,8 +4,8 @@
 #
 #-------------------------------------------------
 
-TRIKCONTROL_BINDIR = /home/likeanowl/trikRuntime/bin/arm-release
-TRIKCONTROL_DIR = ../../trikRuntime/trikControl
+TRIKCONTROL_BINDIR = ../../../trikRuntime/bin/arm-release
+TRIKCONTROL_DIR = ../../../trikRuntime/trikControl
 
 QT       += core gui
 QT       += network
@@ -23,7 +23,7 @@ INCLUDEPATH = \
         $$TRIKCONTROL_DIR/include/trikControl \
         telemetry/ \
 
-INCLUDEPATH += /home/likeanowl/trikRuntime/trikControl/include/trikControl
+INCLUDEPATH += ../../../trikRuntime/trikControl/include/trikControl
 
 LIBS += -L$$TRIKCONTROL_BINDIR -ltrikControl -ltrikKernel -lqslog -ltrikHal
 
@@ -33,16 +33,16 @@ LIBS += -L$$TRIKCONTROL_BINDIR -ltrikControl -ltrikKernel -lqslog -ltrikHal
 
 SOURCES += main.cpp \
     tcpcommunicator.cpp \
-    fakeobserver.cpp \
-    fakedaemon.cpp \
+#    fakeobserver.cpp \
+#    fakedaemon.cpp \
     udpcommunicator.cpp \
     daemon.cpp \
     observer.cpp
 HEADERS += \
     tcpcommunicator.h \
     telemetry_const.h \
-    fakeobserver.h \
-    fakedaemon.h \
+#    fakeobserver.h \
+#    fakedaemon.h \
     udpcommunicator.h \
     icommunicator.h \
     daemon.h \

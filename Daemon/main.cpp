@@ -1,7 +1,7 @@
 #include <QApplication>
+#include <QtCore>
 #include "daemon.h"
 #include "fakedaemon.h"
-#include <QtCore>
 
 int main(int argc, char *argv[])
 {
@@ -23,6 +23,7 @@ int main(int argc, char *argv[])
         }
     }
 
+    //FakeDaemon fakeDaemon(app.thread(), configPath);
     Daemon daemon(app.thread(), configPath);
     return app.exec();
 }

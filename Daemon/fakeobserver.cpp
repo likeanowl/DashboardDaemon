@@ -1,6 +1,11 @@
-#include <fakeobserver.h>
 #include <QDebug>
+#include "fakeobserver.h"
 
+/**
+ * @brief FakeObserver::FakeObserver
+ * @param devName
+ * @param fakeDaemon
+ */
 FakeObserver::FakeObserver(QString devName, FakeDaemon* fakeDaemon)
 {
     name = devName;
@@ -11,6 +16,9 @@ FakeObserver::FakeObserver(QString devName, FakeDaemon* fakeDaemon)
     fakeDaemon->attach(this);
 }
 
+/**
+ * @brief FakeGyroObserver::update
+ */
 void FakeGyroObserver::update()
 {
     newData = true;
@@ -29,6 +37,9 @@ void FakeGyroObserver::update()
     value = out;
 }
 
+/**
+ * @brief FakeAccelObserver::update
+ */
 void FakeAccelObserver::update()
 {
     newData = true;
@@ -47,6 +58,9 @@ void FakeAccelObserver::update()
     value = out;
 }
 
+/**
+ * @brief FakeBatteryObserver::update
+ */
 void FakeBatteryObserver::update()
 {
     newData = true;
@@ -59,6 +73,9 @@ void FakeBatteryObserver::update()
     value = temp;
 }
 
+/**
+ * @brief FakePowerMotorObserver::update
+ */
 void FakePowerMotorObserver::update()
 {
     newData = true;
@@ -71,6 +88,9 @@ void FakePowerMotorObserver::update()
     value = temp;
 }
 
+/**
+ * @brief FakeEncoderObserver::update
+ */
 void FakeEncoderObserver::update()
 {
     newData = true;

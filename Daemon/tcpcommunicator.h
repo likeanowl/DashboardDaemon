@@ -1,10 +1,10 @@
 #pragma once
 
-#include <telemetry_const.h>
 #include <QTcpServer>
 #include <QTcpSocket>
 #include <QDataStream>
-#include <icommunicator.h>
+#include "icommunicator.h"
+#include "telemetry_const.h"
 
 class TcpCommunicator : public ICommunicator
 {

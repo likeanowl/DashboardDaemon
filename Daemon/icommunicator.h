@@ -1,8 +1,11 @@
 #pragma once
 
-#include <telemetry_const.h>
 #include <QObject>
+#include "telemetry_const.h"
 
+/**
+ * @brief ICommunicator - interface for TCP and UDP communicators
+ */
 class ICommunicator : public QObject
 {
     Q_OBJECT

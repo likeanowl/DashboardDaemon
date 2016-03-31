@@ -1,14 +1,13 @@
 #pragma once
 
-#include <telemetry_const.h>
 #include <QObject>
 #include <QVector>
 #include <QTimer>
-#include <fakeobserver.h>
-#include <tcpcommunicator.h>
-#include <udpcommunicator.h>
-#include <icommunicator.h>
 #include <QElapsedTimer>
+#include <fakeobserver.h>
+#include "tcpcommunicator.h"
+#include "udpcommunicator.h"
+#include "telemetry_const.h"
 
 class FakeObserver;
 class FakeGyroObserver;

@@ -34,13 +34,13 @@ QString const ACCELEROMETER_NAME = "A";
 QString const GYROSCOPE_NAME = "G";
 QString const BATTERY_NAME = "B";
 QString const POWER_MOTOR1_NAME = "M1";
-QString const POWER_MOTOR2_NAME = "JM1";
-QString const POWER_MOTOR3_NAME = "JM2";
-QString const POWER_MOTOR4_NAME = "JM3";
-QString const ENCODER1_NAME = "JB1";
-QString const ENCODER2_NAME = "JB2";
-QString const ENCODER3_NAME = "JB3";
-QString const ENCODER4_NAME = "JB4";
+QString const POWER_MOTOR2_NAME = "M2";
+QString const POWER_MOTOR3_NAME = "M3";
+QString const POWER_MOTOR4_NAME = "M4";
+QString const ENCODER1_NAME = "E1";
+QString const ENCODER2_NAME = "E2";
+QString const ENCODER3_NAME = "E3";
+QString const ENCODER4_NAME = "E4";
 
 //daemon numbers
 int const TCP_PEDIOD = 10;
