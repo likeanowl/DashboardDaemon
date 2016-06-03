@@ -109,7 +109,6 @@ void FakeDaemon::startTelemetry()
     timer.stop();
     connect(&timer, SIGNAL(timeout()), this, SLOT(zipPackage()));
     timer.start(updatePeriod);
-
 }
 
 /**
@@ -119,10 +118,13 @@ void FakeDaemon::zipPackage()
 {
     QString package;
     QElapsedTimer elapsedTimer;
-    if (count == 500)
+    QElapsedTimer cycleTimer;
+    if (count == 1000)
     {
-        qDebug() << count << "Packages with size" << pckgSize << "bytes send took " << elapsedTimer.elapsed() << "milliseconds";
+        qDebug() << count << "Packages with size" << pckgSize << "bytes send took "
+                 << elapsedTimer.elapsed() - time << "milliseconds";
         count = 0;
+        time = 0;
     }
     if (count == 0)
     {
@@ -130,6 +132,7 @@ void FakeDaemon::zipPackage()
     }
     for (int j = 0; j < int(pckgSize / 75); j++)
     {
+        cycleTimer.start();
         for (int i = 0; i < fakeObservers.size(); i++)
         {
             QVector<float> data = fakeObservers[i]->getValue();
@@ -144,9 +147,11 @@ void FakeDaemon::zipPackage()
             fakeObservers[i]->unsubscribe();
         }
     }
+    time += cycleTimer.elapsed();
     if (package.size() > 0)
     {
-        tcpCommunicator->send(package);
+        package += QString::number(count);
+        udpCommunicator->send(package);
     }
     count++;
 }

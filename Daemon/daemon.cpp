@@ -2,12 +2,10 @@
 #include <QStringList>
 #include "brickFactory.h"
 #include "daemon.h"
+#include <QElapsedTimer>
 
-/**
- * @brief Constructor
- * @param guiThread
- * @param configPath
- */
+using namespace trikControl;
+
 Daemon::Daemon(QThread *guiThread, QString configPath) :
     brick(trikControl::BrickFactory::create())
 
@@ -28,9 +26,6 @@ Daemon::Daemon(QThread *guiThread, QString configPath) :
     accelObserver->setUpdateInterval(SENSORS3D_DATA_UPDATE_PERIOD);
     batteryObserver = new BatteryObserver(BATTERY_NAME, brick, this);
     batteryObserver->setUpdateInterval(BATTERY_DATA_UPDATE_PERIOD);
-
-    //toDO: encodersPorts,motorPorts list;
-    //toDO: send info to Dashboard about devices;
 
     qDebug() << brick->motorPorts(MotorInterface::Type::powerMotor);
     qDebug() << brick->encoderPorts();
@@ -59,10 +54,6 @@ Daemon::Daemon(QThread *guiThread, QString configPath) :
     testSensors(2);
 }
 
-/**
- * @brief Checking if all observers connected to controller sensors and prints data from them twice
- * @param times
- */
 void Daemon::testSensors(int times)
 {
     for (int j = 0; j < times; j++)
@@ -77,9 +68,6 @@ void Daemon::testSensors(int times)
     }
 }
 
-/**
- * @brief Closing telemetry connection if client disconnected from server
- */
 void Daemon::closeTelemetry()
 {
     qDebug() << "TELEMETRY CLOSED";
@@ -89,27 +77,17 @@ void Daemon::closeTelemetry()
         observers[i]->unsubscribe();
 }
 
-/**
- * @brief Updating sensors data
- */
 void Daemon::notify()
 {
     for (int i = 0; i < observers.size(); i++)
         observers[i]->update();
 }
 
-/**
- * @brief Attaching an observer to related sensor
- * @param obs
- */
 void Daemon::attach(Observer *obs)
 {
     observers.push_back(obs);
 }
 
-/**
- * @brief Starting Telemetry
- */
 void Daemon::startTelemetry()
 {
     tcpCommunicator->send(TelemetryConst::SEND_FROM_DAEMON_MESSAGE());
@@ -117,16 +95,12 @@ void Daemon::startTelemetry()
     timer.stop();
     connect(&timer, SIGNAL(timeout()), this, SLOT(zipPackage()));
     timer.start(updatePeriod);
-
+    for (int i = 0; i < observers.size(); i++)
+        observers[i]->subscribe();
 }
 
-/**
- * @brief Converting data from sensors and trying to send it
- */
 void Daemon::zipPackage()
 {
-    QString package;
-
     for (int i = 0; i < observers.size(); i++)
     {
          QVector<float> data = observers[i]->getValue();
@@ -141,13 +115,8 @@ void Daemon::zipPackage()
     {
         udpCommunicator->send(package);
     }
-
 }
 
-/**
- * @brief Parsing incoming message
- * @param message
- */
 void Daemon::parseMessage(QString message)
 {
     qDebug() << message;

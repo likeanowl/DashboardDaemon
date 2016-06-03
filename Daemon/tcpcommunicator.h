@@ -31,7 +31,7 @@ private slots:
 private:
     QHostAddress hostAddr;
     int         port;
-    QTcpServer* tcpServer;
-    QTcpSocket* tcpSocket;
+    QTcpServer* tcpServer = nullptr;
+    QTcpSocket* tcpSocket = nullptr;
     quint16     blockSize;
 };

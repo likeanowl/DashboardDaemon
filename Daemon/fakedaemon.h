@@ -53,7 +53,8 @@ private:
 
     QTimer timer;
 
-    int pckgSize = 150;
+    int pckgSize = 75;
+    int time = 0;
     int count = 0;
     int updatePeriod;
 };

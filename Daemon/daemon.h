@@ -4,19 +4,14 @@
 #include <QVector>
 #include <QTimer>
 #include "brickInterface.h"
-#include "observer.h"
+#include "accelobserver.h"
+#include "batteryobserver.h"
+#include "encoderobserver.h"
+#include "powermotorobserver.h"
+#include "gyroobserver.h"
 #include "tcpcommunicator.h"
 #include "udpcommunicator.h"
 #include "telemetry_const.h"
-
-using namespace trikControl;
-
-class Observer;
-class GyroObserver;
-class AccelObserver;
-class BatteryObserver;
-class PowerMotorObserver;
-class EncoderObserver;
 
 class Daemon : public QObject
 {
@@ -38,23 +33,27 @@ private slots:
     void parseMessage(QString message);
 
 private:
-    BrickInterface *brick;
-    TcpCommunicator *tcpCommunicator;
-    UdpCommunicator *udpCommunicator;
-    QVector<Observer *> observers;
-    GyroObserver *gyroObserver;
-    AccelObserver *accelObserver;
-    BatteryObserver* batteryObserver;
-    PowerMotorObserver* powerMotor1;
-    PowerMotorObserver* powerMotor2;
-    PowerMotorObserver* powerMotor3;
-    PowerMotorObserver* powerMotor4;
-    EncoderObserver* encoder1;
-    EncoderObserver* encoder2;
-    EncoderObserver* encoder3;
-    EncoderObserver* encoder4;
+    trikControl::BrickInterface *brick = nullptr;
+    TcpCommunicator *tcpCommunicator = nullptr;
+    UdpCommunicator *udpCommunicator = nullptr;
+
+    QVector<Observer*> observers = QVector<Observer*>();
+
+    GyroObserver *gyroObserver = nullptr;
+
+    AccelObserver *accelObserver = nullptr;
+
+    BatteryObserver* batteryObserver = nullptr;
+
+    PowerMotorObserver* powerMotor1 = nullptr;
+    PowerMotorObserver* powerMotor2 = nullptr;
+    PowerMotorObserver* powerMotor3 = nullptr;
+    PowerMotorObserver* powerMotor4 = nullptr;
+
+    EncoderObserver* encoder1 = nullptr;
+    EncoderObserver* encoder2 = nullptr;
+    EncoderObserver* encoder3 = nullptr;
+    EncoderObserver* encoder4 = nullptr;
 
     QTimer timer;
-
-    int updatePeriod;
 };

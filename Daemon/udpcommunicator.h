@@ -29,7 +29,7 @@ private slots:
 
 private:
     int         port;
-    QUdpSocket* udpSocket;
+    QUdpSocket* udpSocket = nullptr;
     QHostAddress hostAddr;
     quint16     blockSize;
 };

@@ -33,20 +33,30 @@ LIBS += -L$$TRIKCONTROL_BINDIR -ltrikControl -ltrikKernel -lqslog -ltrikHal
 
 SOURCES += main.cpp \
     tcpcommunicator.cpp \
-#    fakeobserver.cpp \
-#    fakedaemon.cpp \
+    #fakeobserver.cpp \
+    #fakedaemon.cpp \
     udpcommunicator.cpp \
     daemon.cpp \
-    observer.cpp
+    observer.cpp \
+    gyroobserver.cpp \
+    accelobserver.cpp \
+    batteryobserver.cpp \
+    powermotorobserver.cpp \
+    encoderobserver.cpp
 HEADERS += \
     tcpcommunicator.h \
     telemetry_const.h \
-#    fakeobserver.h \
-#    fakedaemon.h \
+    #fakeobserver.h \
+    #fakedaemon.h \
     udpcommunicator.h \
     icommunicator.h \
     daemon.h \
-    observer.h
+    observer.h \
+    gyroobserver.h \
+    accelobserver.h \
+    batteryobserver.h \
+    powermotorobserver.h \
+    encoderobserver.h
 
 unix {
     target.path = /usr/lib
