@@ -44,7 +44,7 @@ void TcpCommunicator::abortConnection()
     emit lostConnection();
 }
 
-void TcpCommunicator::send(QString message)
+void TcpCommunicator::send(const QString &message)
 {
     QByteArray block;
     QDataStream out(&block, QIODevice::WriteOnly);

@@ -2,7 +2,6 @@
 #include <QStringList>
 #include "brickFactory.h"
 #include "daemon.h"
-#include <QElapsedTimer>
 
 using namespace trikControl;
 
@@ -75,6 +74,9 @@ void Daemon::closeTelemetry()
     disconnect(&timer, SIGNAL(timeout()), this, SLOT(zipPackage()));
     for (int i = 0; i < observers.size(); i++)
         observers[i]->unsubscribe();
+    delete(udpCommunicator);
+    delete(tcpCommunicator);
+    delete(&observers);
 }
 
 void Daemon::notify()
@@ -101,6 +103,7 @@ void Daemon::startTelemetry()
 
 void Daemon::zipPackage()
 {
+    QString package;
     for (int i = 0; i < observers.size(); i++)
     {
          QVector<float> data = observers[i]->getValue();
@@ -113,11 +116,11 @@ void Daemon::zipPackage()
     }
     if (package.size() > 0)
     {
-        udpCommunicator->send(package);
+        tcpCommunicator->send(package);
     }
 }
 
-void Daemon::parseMessage(QString message)
+const void Daemon::parseMessage(QString message) const
 {
     qDebug() << message;
     QStringList list = message.split(":", QString::SkipEmptyParts);

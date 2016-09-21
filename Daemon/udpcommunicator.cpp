@@ -37,7 +37,7 @@ void UdpCommunicator::abortConnection()
     emit lostConnection();
 }
 
-void UdpCommunicator::send(QString message)
+void UdpCommunicator::send(const QString &message)
 {
     QByteArray block(message.toStdString().c_str());
     udpSocket->writeDatagram(block, hostAddr, port);

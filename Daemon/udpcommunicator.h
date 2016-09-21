@@ -20,7 +20,7 @@ signals:
     void recieveMessage(QString);
 
 public slots:
-    void send(QString);
+    void send(const QString &);
 
 private slots:
     void setConnection();

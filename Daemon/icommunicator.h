@@ -19,7 +19,7 @@ signals:
     void recieveMessage(QString);
 
 public slots:
-    virtual void send(QString) = 0;
+    virtual void send(const QString &) = 0;
     virtual void setConnection() = 0;
     virtual void abortConnection() = 0;
 

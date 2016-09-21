@@ -30,30 +30,32 @@ private slots:
     void zipPackage();
     void startTelemetry();
     void closeTelemetry();
-    void parseMessage(QString message);
+    const void parseMessage(QString message) const;
 
 private:
     trikControl::BrickInterface *brick = nullptr;
-    TcpCommunicator *tcpCommunicator = nullptr;
-    UdpCommunicator *udpCommunicator = nullptr;
+    TcpCommunicator *tcpCommunicator   = nullptr;
+    UdpCommunicator *udpCommunicator   = nullptr;
 
-    QVector<Observer*> observers = QVector<Observer*>();
+    QVector<Observer*> observers       = QVector<Observer*>();
 
-    GyroObserver *gyroObserver = nullptr;
+    GyroObserver *gyroObserver         = nullptr;
 
-    AccelObserver *accelObserver = nullptr;
+    AccelObserver *accelObserver       = nullptr;
 
-    BatteryObserver* batteryObserver = nullptr;
+    BatteryObserver* batteryObserver   = nullptr;
 
-    PowerMotorObserver* powerMotor1 = nullptr;
-    PowerMotorObserver* powerMotor2 = nullptr;
-    PowerMotorObserver* powerMotor3 = nullptr;
-    PowerMotorObserver* powerMotor4 = nullptr;
+    PowerMotorObserver* powerMotor1    = nullptr;
+    PowerMotorObserver* powerMotor2    = nullptr;
+    PowerMotorObserver* powerMotor3    = nullptr;
+    PowerMotorObserver* powerMotor4    = nullptr;
 
-    EncoderObserver* encoder1 = nullptr;
-    EncoderObserver* encoder2 = nullptr;
-    EncoderObserver* encoder3 = nullptr;
-    EncoderObserver* encoder4 = nullptr;
+    EncoderObserver* encoder1          = nullptr;
+    EncoderObserver* encoder2          = nullptr;
+    EncoderObserver* encoder3          = nullptr;
+    EncoderObserver* encoder4          = nullptr;
 
     QTimer timer;
+
+    int updatePeriod;
 };
